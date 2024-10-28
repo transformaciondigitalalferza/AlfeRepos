@@ -1,0 +1,32 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #343a40;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.sidebar h4 {
+  border-bottom: 1px solid #495057;
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-link {
+  padding: 10px;
+  font-size: 18px;
+  color: #adb5bd;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #495057;
+  color: white;
+  cursor: pointer;
+}
+
+.offcanvas {
+  width: 250px;
+}
