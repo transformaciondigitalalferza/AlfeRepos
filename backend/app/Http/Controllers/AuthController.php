@@ -19,18 +19,27 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'idcargo' => 'nullable|exists:cargos,id',
+            'idarea' => 'nullable|exists:areas,id',
+            'subarea' => 'nullable|exists:subareas,id',
+            'estado' => 'boolean',
         ]);
 
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
+            'idcargo' => $validatedData['idcargo'] ?? null,
+            'idarea' => $validatedData['idarea'] ?? null,
+            'subarea' => $validatedData['subarea'] ?? null,
+            'estado' => $validatedData['estado'] ?? true,
         ]);
-
+        
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Usuario registrado correctamente',
+            'user' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ], 201);
@@ -68,6 +77,7 @@ class AuthController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'user'=> $user,
             ], 200);
         } catch (ValidationException $e) {
             Log::warning('Errores de validación en el login', $e->errors());
@@ -80,9 +90,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Cierre de sesión de usuario.
-     */
     public function logout(Request $request)
     {
         try {

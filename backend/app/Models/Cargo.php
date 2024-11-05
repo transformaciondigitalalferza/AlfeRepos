@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $descripcion
  * @property Procedimiento[] $procedimientos
  * @property Politica[] $politicas
- * @property Formato[] $formatos
+ * @property Formatos[] $formatos
  * @property User[] $users
  * @property Funcion[] $funcions
  */

@@ -1,0 +1,136 @@
+.comisiones-wrapper {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f4f8;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #343a40;
+  color: #fff; 
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.comisiones-container {
+  flex: 1;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.comisiones-container h2 {
+  margin-bottom: 20px;
+  color: #343a40;
+  font-size: 24px;
+}
+
+.dropdown-container {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.proyectos-dropdown {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 2px solid #007BFF;
+  border-radius: 8px;
+  background-color: #fff;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2218%22%20height%3D%2212%22%20viewBox%3D%220%200%2018%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1%201l8%208%208-8%22%20stroke%3D%22%23007BFF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.proyectos-dropdown:hover {
+  border-color: #0056b3;
+}
+
+.proyectos-dropdown:focus {
+  outline: none;
+  border-color: #0056b3;
+}
+
+.fetch-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  align-self: flex-start; /* Alinea el botón a la izquierda */
+}
+
+.fetch-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.fetch-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.table-container {
+  position: relative;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.comisiones-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px; /* Espacio debajo de la tabla */
+}
+
+.comisiones-table th,
+.comisiones-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.comisiones-table th {
+  background-color: #007BFF;
+  color: white;
+  font-weight: bold;
+}
+
+.comisiones-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.export-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  background-color: #28a745;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.export-icon:hover {
+  background-color: #218838;
+  align-self: flex-end
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}

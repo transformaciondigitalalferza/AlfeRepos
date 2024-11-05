@@ -30,18 +30,24 @@ function Login() {
         password,
       });
 
-      // Guardar el token en localStorage
+      // Guardar el token y el ID del usuario en localStorage
       localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("userId", response.data.user.id); // Suponemos que el backend devuelve el ID del usuario
 
-      // Configurar el encabezado Authorization para futuras solicitudes
+      // Configurar el encabezado Authorization globalmente para futuras solicitudes
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.access_token}`;
 
-      navigate("/dashboard"); // Redirigir al dashboard
+      // Redirigir al dashboard
+      navigate("/dashboard");
     } catch (error) {
-      console.error(error);
-      setError("Credenciales incorrectas o error en el servidor.");
+      console.error("Error:", error);
+      if (error.response && error.response.status === 401) {
+        setError("Correo o contraseña incorrectos.");
+      } else {
+        setError("Hubo un problema con el servidor. Inténtalo más tarde.");
+      }
     } finally {
       setLoading(false);
     }
