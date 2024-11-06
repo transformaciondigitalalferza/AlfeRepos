@@ -10,9 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Registro de usuarios.
-     */
+
     public function register(Request $request)
     {
         $validatedData = $request->validate([
@@ -23,6 +21,7 @@ class AuthController extends Controller
             'idarea' => 'nullable|exists:areas,id',
             'subarea' => 'nullable|exists:subareas,id',
             'estado' => 'boolean',
+            'rol' => 'nullable|exists:rol,id'
         ]);
 
         $user = User::create([
@@ -33,6 +32,7 @@ class AuthController extends Controller
             'idarea' => $validatedData['idarea'] ?? null,
             'subarea' => $validatedData['subarea'] ?? null,
             'estado' => $validatedData['estado'] ?? true,
+            'rol' => $validatedData['rol'] ?? null,
         ]);
         
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -45,9 +45,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * Inicio de sesión de usuarios.
-     */
     public function login(Request $request)
     {
         Log::info('Solicitud de login recibida', $request->only(['email']));
@@ -93,7 +90,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->currentAccessToken()->delete(); // Elimina el token actual
+            $request->user()->currentAccessToken()->delete(); 
             Log::info('Token eliminado correctamente para usuario', ['user_id' => $request->user()->id]);
 
             return response()->json(['message' => 'Sesión cerrada correctamente'], 200);
