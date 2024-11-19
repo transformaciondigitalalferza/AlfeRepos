@@ -5,13 +5,6 @@
   padding: 20px;
 }
 
-.sidebar {
-  width: 250px;
-  background-color: #343a40;
-  color: #fff; 
-  padding: 20px;
-  box-sizing: border-box;
-}
 
 .comisiones-container {
   flex: 1;
@@ -40,7 +33,7 @@
   font-size: 16px;
   border: 2px solid #007BFF;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #007BFF;
   appearance: none;
   background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2218%22%20height%3D%2212%22%20viewBox%3D%220%200%2018%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1%201l8%208%208-8%22%20stroke%3D%22%23007BFF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E');
   background-repeat: no-repeat;
@@ -133,4 +126,86 @@
   color: red;
   font-weight: bold;
   margin-top: 20px;
+}
+.comisiones-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Contenedor de contenido principal */
+.comisiones-container {
+  flex-grow: 1;
+  padding-left: 250px; /* Mismo ancho que la Sidebar */
+  padding: 20px;
+  transition: padding-left 0.3s ease;
+}
+
+.sidebar.collapsed + .comisiones-container {
+  padding-left: 80px; 
+}
+
+@media (max-width: 768px) {
+  .comisiones-container {
+    padding-left: 0;
+  }
+}
+
+/* Estilo para el spinner de carga */
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilo para el mensaje de error */
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+/* Posicionamiento del icono de exportación */
+.export-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+/* Ajustes específicos para la tabla */
+.table-container {
+  position: relative; /* Para que el icono de exportación se posicione correctamente */
+}
+
+.comisiones-table {
+  width: 100%;
+  text-align: center;
+}
+
+/* Estilos adicionales para centrar elementos dentro de la Sidebar */
+.sidebar-title {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.toggle-button {
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+/* Ajustes para botones */
+.fetch-button {
+  width: 100%;
+}
+
+/* Ajustes para dropdown */
+.proyectos-dropdown {
+  width: 100%;
 }

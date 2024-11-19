@@ -1,142 +1,267 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  Card,
-  Alert,
-  Spinner,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "./Sidebar";
+// src/components/Dashboard.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Sidebar from "./Sidebar"; // Asegúrate de ajustar la ruta correctamente
 
-function Dashboard() {
-  const [user, setUser] = useState(null);
+const Dashboard = () => {
+  const [userData, setUserData] = useState(null);
+  const [procedimientos, setProcedimientos] = useState([]);
+  const [formatos, setFormatos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState('');
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-};
 
-const handleSearch = () => {
-    if (inputValue.trim() !== '') {
-        alert(`Buscando: ${inputValue}`);
-    } else {
-        alert('Por favor, ingresa un término de búsqueda.');
-    }
-};
+  // Estados para los términos de búsqueda
+  const [searchProcedimientos, setSearchProcedimientos] = useState('');
+  const [searchFormatos, setSearchFormatos] = useState('');
+
+  // Obtener el userId de localStorage
+  const userId = localStorage.getItem("userId");
+
+  // URLs de las APIs
+  const userApiUrl = `http://192.168.2.47:8000/api/userdata/${userId}`;
+  const procedimientosApiUrl = 'http://192.168.2.47:8000/api/procedimientos';
+  const formatosApiUrl = 'http://192.168.2.47:8000/api/formatos';
+
+  // Función para manejar la visualización de archivos
+  const handleView = (filePath) => {
+    const adjustedPath = `storage/${filePath}`;
+    window.open(`http://192.168.2.47:8000/${adjustedPath}`, "_blank");
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
+    if (!userId) {
+      setError("No se encontró el userId en localStorage.");
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
       try {
-        const response = await axios.get("/api/dashboard", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setUser(response.data.user);
-      } catch (error) {
-        console.error("Error al obtener datos del usuario:", error);
-        setError("No se pudo cargar la información del usuario.");
+        // Realizar solicitudes simultáneas
+        const [userResponse, procedimientosResponse, formatosResponse] = await Promise.all([
+          axios.get(userApiUrl),
+          axios.get(procedimientosApiUrl),
+          axios.get(formatosApiUrl),
+        ]);
+
+        setUserData(userResponse.data);
+
+        // Filtrar procedimientos donde idcargo === cargo_id del usuario
+        const filteredProcedimientos = procedimientosResponse.data.filter(
+          (procedimiento) => Number(procedimiento.idcargo) === Number(userResponse.data.cargo_id)
+        );
+        setProcedimientos(filteredProcedimientos);
+
+        // Filtrar formatos donde idcargo === cargo_id del usuario
+        const filteredFormatos = formatosResponse.data.filter(
+          (formato) => Number(formato.idcargo) === Number(userResponse.data.cargo_id)
+        );
+        setFormatos(filteredFormatos);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Hubo un error al obtener los datos.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
-  }, []);
+    fetchData();
+  }, [userId, userApiUrl, procedimientosApiUrl, formatosApiUrl]);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post("/api/logout", {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      localStorage.removeItem("token"); 
-      delete axios.defaults.headers.common["Authorization"];
-      navigate("/login");
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      setError("No se pudo cerrar la sesión. Inténtalo de nuevo.");
-    }
+  // Funciones para manejar los cambios en los campos de búsqueda
+  const handleSearchProcedimientos = (e) => {
+    setSearchProcedimientos(e.target.value);
   };
+
+  const handleSearchFormatos = (e) => {
+    setSearchFormatos(e.target.value);
+  };
+
+  // Filtrar los procedimientos y formatos basados en los términos de búsqueda
+  const filteredProcedimientos = procedimientos.filter((procedimiento) =>
+    procedimiento.nombre.toLowerCase().includes(searchProcedimientos.toLowerCase())
+  );
+
+  const filteredFormatos = formatos.filter((formato) =>
+    formato.nombre.toLowerCase().includes(searchFormatos.toLowerCase())
+  );
 
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <Spinner animation="border" variant="primary" />
+      <div className="d-flex">
+        <Sidebar />
+        <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </div>
+            <div>Cargando...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="d-flex">
+        <Sidebar />
+        <div className="flex-grow-1 container mt-5">
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <div className="d-flex">
+        <Sidebar />
+        <div className="flex-grow-1 container mt-5">
+          <div className="alert alert-warning" role="alert">
+            No se encontraron datos del usuario.
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="d-flex">
+      {/* Sidebar */}
       <Sidebar />
-      <div
-        className="content p-4"
-        style={{ marginLeft: "250px", width: "100%" }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-            <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder="Escribe tu búsqueda"
-                style={{ marginRight: '8px', padding: '5px', flexGrow: 1 }}
-            />
-            <button onClick={handleSearch} style={{ padding: '5px 10px' }}>
-                Buscar
-            </button>
-        </div>
-        <div>
-          <Container>
-            <Row className="justify-content-center">
-              <Col xs={12} md={8} lg={6}>
-                <Card>
-                  <Card.Body>
-                    <h2 className="text-center mb-4">Dashboard</h2>
 
-                    {error && <Alert variant="danger">{error}</Alert>}
+      {/* Contenido Principal */}
+      <div className="flex-grow-1 p-4">
+        <div className="container">
+          {/* Información del Usuario */}
+          <div className="card mb-4">
+            <div className="card-header bg-primary text-white">
+              <h3>Bienvenido {userData.name}</h3>
+            </div>
+            <div className="card-body">
+              <p><strong>Cargo:</strong> {userData.nombrecargo}</p>
+              <p><strong>Área:</strong> {userData.area_nombre}</p>
+              <p><strong>Subárea:</strong> {userData.nombresubarea}</p>
+            </div>
+          </div>
 
-                    {user ? (
-                      <>
-                        <p>
-                          <strong>Nombre:</strong> {user.name}
-                        </p>
-                        <p>
-                          <strong>Email:</strong> {user.email}
-                        </p>
+          {/* Tarjeta para Procedimientos y Formatos en la Misma Fila */}
+          <div className="row">
+            {/* Procedimientos Disponibles */}
+            <div className="col-md-6 mb-4">
+              <div className="card h-100">
+                <div className="card-header bg-success text-white">
+                  <h4>Procedimientos Disponibles</h4>
+                </div>
+                <div className="card-body">
+                  {/* Campo de Búsqueda para Procedimientos */}
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar Procedimientos..."
+                      value={searchProcedimientos}
+                      onChange={handleSearchProcedimientos}
+                    />
+                  </div>
 
-                        <Button
-                          variant="primary"
-                          onClick={handleLogout}
-                          className="w-100"
-                        >
-                          Cerrar Sesión
-                        </Button>
-                      </>
-                    ) : (
-                      <Alert variant="warning">
-                        No se pudo cargar la información del usuario.
-                      </Alert>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          </Container>
+                  {/* Tabla de Procedimientos */}
+                  {filteredProcedimientos.length > 0 ? (
+                    <div className="table-responsive">
+                      <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredProcedimientos.map((procedimiento) => (
+                            <tr key={procedimiento.id}>
+                              <td>{procedimiento.nombre}</td>
+                              <td>
+                                <button
+                                  onClick={() => handleView(procedimiento.archivo)}
+                                  className="btn btn-primary btn-sm"
+                                >
+                                  Ver
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="alert alert-info" role="alert">
+                      No hay procedimientos disponibles para tu cargo.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Formatos Disponibles */}
+            <div className="col-md-6 mb-4">
+              <div className="card h-100">
+                <div className="card-header bg-info text-white">
+                  <h4>Formatos Disponibles</h4>
+                </div>
+                <div className="card-body">
+                  {/* Campo de Búsqueda para Formatos */}
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar Formatos..."
+                      value={searchFormatos}
+                      onChange={handleSearchFormatos}
+                    />
+                  </div>
+
+                  {/* Tabla de Formatos */}
+                  {filteredFormatos.length > 0 ? (
+                    <div className="table-responsive">
+                      <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredFormatos.map((formato) => (
+                            <tr key={formato.id}>
+                              <td>{formato.nombre}</td>
+                              <td>
+                                <button
+                                  onClick={() => handleView(formato.archivo)}
+                                  className="btn btn-primary btn-sm"
+                                >
+                                  Ver
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="alert alert-info" role="alert">
+                      No hay formatos disponibles para tu cargo.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Dashboard;

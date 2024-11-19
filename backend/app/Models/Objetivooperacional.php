@@ -2,65 +2,55 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property integer $id
- * @property integer $idobjetivoestrategico
- * @property integer $idfrecuencia
- * @property string $descripcion
- * @property float $meta
- * @property string $fechainicio
- * @property string $fechafin
- * @property string $fechaactualizacion
- * @property Indicadore[] $indicadores
- * @property Frecuencia $frecuencia
- * @property Objetivoestrategico $objetivoestrategico
- * @property Tarea[] $tareas
- */
 class Objetivooperacional extends Model
 {
-    /**
-     * The table associated with the model.
-     * 
-     * @var string
-     */
+    use HasFactory;
+
     protected $table = 'objetivooperacional';
 
-    /**
-     * @var array
-     */
-    protected $fillable = ['idobjetivoestrategico', 'idfrecuencia', 'descripcion', 'meta', 'fechainicio', 'fechafin', 'fechaactualizacion'];
+    protected $fillable = [
+        'idobjetivoestrategico',
+        'idfrecuencia',
+        'descripcion',
+        'meta',
+        'fechainicio',
+        'fechafin',
+        'fechaactualizacion',
+        'idarea', // Añadido
+    ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    public $timestamps = false;  
+
+    // Relación con Indicadores
     public function indicadores()
     {
         return $this->hasMany('App\Models\Indicadore', 'idoperativo');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Relación con Frecuencia
     public function frecuencium()
     {
         return $this->belongsTo('App\Models\Frecuencium', 'idfrecuencia');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Relación con Objetivo Estratégico
     public function objetivoestrategico()
     {
         return $this->belongsTo('App\Models\Objetivoestrategico', 'idobjetivoestrategico');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    // Relación con Tareas
     public function tareas()
     {
         return $this->hasMany('App\Models\Tarea', 'idobjoperacional');
+    }
+
+    // Relación con Área
+    public function area()
+    {
+        return $this->belongsTo('App\Models\Area', 'idarea');
     }
 }

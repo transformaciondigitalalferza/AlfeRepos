@@ -45,30 +45,47 @@ function Profile() {
         className="d-flex justify-content-center align-items-center"
         style={{ minHeight: "100vh" }}
       >
-        <Spinner animation="border" variant="primary" />
+        <Spinner animation="border" variant="primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </Spinner>
+        <span className="ms-2">Cargando datos...</span>
       </div>
     );
   }
 
   if (error) {
-    return <Alert variant="danger">{error}</Alert>;
+    return (
+      <div className="d-flex">
+        <Sidebar />
+        <Container fluid className="p-4">
+          <Alert variant="danger" className="text-center">
+            {error}
+          </Alert>
+        </Container>
+      </div>
+    );
   }
 
   if (!user) {
     return (
-      <Alert variant="warning">
-        No se pudieron obtener los datos del usuario.
-      </Alert>
+      <div className="d-flex">
+        <Sidebar />
+        <Container fluid className="p-4">
+          <Alert variant="warning" className="text-center">
+            No se pudieron obtener los datos del usuario.
+          </Alert>
+        </Container>
+      </div>
     );
   }
 
-  // Verifica que 'user' tenga las propiedades necesarias
   const { id: userId, name, email, nombrecargo, nombres } = user;
 
   return (
     <div className="d-flex">
       <Sidebar />
-      <Container fluid className="p-4 bg-light">
+
+      <Container fluid className="p-4">
         <Row className="justify-content-center">
           <Col xs={12} md={8} lg={6}>
             <Card className="shadow-sm">
