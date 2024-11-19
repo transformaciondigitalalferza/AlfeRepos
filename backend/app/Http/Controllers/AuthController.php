@@ -17,11 +17,11 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'idcargo' => 'nullable|exists:cargos,id',
-            'idarea' => 'nullable|exists:areas,id',
-            'subarea' => 'nullable|exists:subareas,id',
+            'idcargo' => 'nullable|exists:cargo,id',
+            'idarea' => 'nullable|exists:area,id',
+            'subarea' => 'nullable|exists:subarea,id',
             'estado' => 'boolean',
-            'rol' => 'nullable|exists:rol,id'
+            'rol' => 'nullable|exists:rol,id',
         ]);
 
         $user = User::create([
@@ -32,9 +32,9 @@ class AuthController extends Controller
             'idarea' => $validatedData['idarea'] ?? null,
             'subarea' => $validatedData['subarea'] ?? null,
             'estado' => $validatedData['estado'] ?? true,
-            'rol' => $validatedData['rol'] ?? null,
+            'idrol' => $validatedData['rol'] ?? null,
         ]);
-        
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -74,7 +74,7 @@ class AuthController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user'=> $user,
+                'user' => $user,
             ], 200);
         } catch (ValidationException $e) {
             Log::warning('Errores de validación en el login', $e->errors());
@@ -90,7 +90,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->currentAccessToken()->delete(); 
+            $request->user()->currentAccessToken()->delete();
             Log::info('Token eliminado correctamente para usuario', ['user_id' => $request->user()->id]);
 
             return response()->json(['message' => 'Sesión cerrada correctamente'], 200);

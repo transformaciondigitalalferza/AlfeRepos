@@ -11,7 +11,7 @@ class TareaController extends Controller
     public function subirEvidencia(Request $request, $id)
     {
         $request->validate([
-            'evidencia' => 'required|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx|max:2048', // Máx. 2MB
+            'evidencia' => 'required|file|mimes:jpg,jpeg,png,gif,pdf,doc,docx',
         ]);
 
         $tarea = Tarea::findOrFail($id);

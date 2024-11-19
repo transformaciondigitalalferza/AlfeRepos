@@ -25,4 +25,6 @@ class formatos extends Model
     {
         return $this->belongsTo('App\Models\Cargo', 'idcargo');
     }
+    public $timestamps = false;  
+
 }

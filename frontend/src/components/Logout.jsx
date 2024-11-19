@@ -8,7 +8,7 @@ function Logout() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await axios.post("http://localhost:8000/api/logout");
+        await axios.post("http://192.168.2.47:8000/api/logout");
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["Authorization"];
         alert("Sesión cerrada");

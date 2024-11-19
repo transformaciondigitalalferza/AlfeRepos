@@ -1,0 +1,21 @@
+.sidebar-link {
+    color: #76afe9;
+    transition: background-color 0.2s;
+  }
+  
+  .sidebar-link:hover {
+    background-color: #76afe9;
+    border-radius: 4px;
+  }
+  
+  .mobile-toggle-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1040; 
+  }
+  
+  .sidebar-collapsed .sidebar-title {
+    display: none;
+  }
+  
