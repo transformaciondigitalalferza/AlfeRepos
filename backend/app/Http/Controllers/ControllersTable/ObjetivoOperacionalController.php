@@ -20,7 +20,7 @@ class ObjetivoOperacionalController extends Controller
             'idobjetivoestrategico' => 'required|integer|exists:objetivoestrategico,id',
             'idfrecuencia' => 'required|integer|exists:frecuencia,id',
             'descripcion' => 'required|string|max:255',
-            'meta' => 'required|numeric',
+            'meta' => 'numeric',
             'fechainicio' => 'required|date',
             'fechafin' => 'nullable|date', // Opcional
             'fechaactualizacion' => 'required|date',

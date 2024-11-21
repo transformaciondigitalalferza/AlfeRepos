@@ -1,21 +1,32 @@
+/* styles/sidebar.css */
 .sidebar-link {
-    color: #76afe9;
-    transition: background-color 0.2s;
-  }
-  
-  .sidebar-link:hover {
-    background-color: #76afe9;
-    border-radius: 4px;
-  }
-  
-  .mobile-toggle-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1040; 
-  }
-  
-  .sidebar-collapsed .sidebar-title {
-    display: none;
-  }
-  
+  color: inherit;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: inherit;
+}
+
+.mobile-toggle-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1040;
+}
+
+.sidebar-collapsed .sidebar-title {
+  display: none;
+}
+
+/* Aseguramos que el contenido principal no quede oculto detrás del sidebar */
+.main-content {
+  margin-left: 250px; /* Ancho del sidebar cuando no está colapsado */
+  transition: margin-left 0.3s;
+}
+
+.sidebar-collapsed ~ .main-content {
+  margin-left: 80px; /* Ancho del sidebar cuando está colapsado */
+}

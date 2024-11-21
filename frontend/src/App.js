@@ -11,6 +11,7 @@ import UpdateDocs from './components/UpdateDocs';
 import ObjStrategico from './components/ObjStrategico';
 import ObjOperacional from './components/ObjOperacional';
 import Tareas from './components/Tareas';
+import IndicadoresGestion from './components/IndicadoresGestion';
 
 function App() {
     return (
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/strategicobjectives" element={<ObjStrategico />} />
                     <Route path="/operationalobjectives" element={<ObjOperacional />} />
                     <Route path="/tareas" element={<Tareas />} />
+                    <Route path="/IndicadoresGest" element={<IndicadoresGestion />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/login" replace />} />

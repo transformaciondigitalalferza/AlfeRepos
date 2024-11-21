@@ -11,8 +11,9 @@ import {
   Badge,
   OverlayTrigger,
   Tooltip,
+  Card,
 } from "react-bootstrap";
-import { FaEdit, FaTrash, FaPlus, FaFileAlt } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaFileAlt, FaCheck, FaClock } from "react-icons/fa";
 import Sidebar from "./Sidebar";
 
 const Tareas = () => {
@@ -165,16 +166,32 @@ const Tareas = () => {
     setEditId(null);
   };
 
-  const getEstadoColor = (idestado) => {
+  const getEstadoBadge = (idestado) => {
     switch (idestado) {
       case "1":
-        return "secondary";
+        return (
+          <Badge bg="secondary">
+            <FaClock className="me-1" /> Pendiente
+          </Badge>
+        );
       case "2":
-        return "warning";
+        return (
+          <Badge bg="warning">
+            <FaClock className="me-1" /> En Progreso
+          </Badge>
+        );
       case "3":
-        return "success";
+        return (
+          <Badge bg="success">
+            <FaCheck className="me-1" /> Completado
+          </Badge>
+        );
       default:
-        return "dark";
+        return (
+          <Badge bg="dark">
+            <FaClock className="me-1" /> Desconocido
+          </Badge>
+        );
     }
   };
 
@@ -190,7 +207,7 @@ const Tareas = () => {
     <div className="d-flex">
       <Sidebar />
 
-      <div className="container mt-5 flex-grow-1">
+      <div className="container mt-5 flex-grow-1" style={{ marginLeft: "300px" }}>
         <h2 className="text-primary mb-4">Gestión de Tareas</h2>
         <Row className="align-items-center mb-4">
           <Col className="text-end">
@@ -206,88 +223,93 @@ const Tareas = () => {
           </Col>
         </Row>
 
-        <Table striped bordered hover responsive>
-          <thead className="table-primary">
-            <tr>
-              <th>Objetivo Operacional</th>
-              <th>Descripción</th>
-              <th>Usuario</th>
-              <th>Evidencia</th>
-              <th>Fecha Inicio</th>
-              <th>Fecha Fin</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tareas.map((tarea) => (
-              <tr key={tarea.id}>
-                <td>{tarea.objetivooperacional?.descripcion || "N/A"}</td>
-                <td>{tarea.descripcion}</td>
-                <td>{tarea.user?.name || "N/A"}</td>
-                <td>
-                  {tarea.evidencia ? (
+        {/* Tabla mejorada visualmente */}
+        <div className="d-flex justify-content-center">
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            style={{ maxWidth: "95%", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+          >
+            <thead className="bg-primary text-white">
+              <tr>
+                <th>Objetivo Operacional</th>
+                <th>Descripción</th>
+                <th>Usuario</th>
+                <th>Evidencia</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tareas.map((tarea) => (
+                <tr key={tarea.id}>
+                  <td>{tarea.objetivooperacional?.descripcion || "N/A"}</td>
+                  <td>{tarea.descripcion}</td>
+                  <td>{tarea.user?.name || "N/A"}</td>
+                  <td>
+                    {tarea.evidencia ? (
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Ver Evidencia</Tooltip>}
+                      >
+                        <Button
+                          variant="link"
+                          onClick={() =>
+                            window.open(
+                              `http://192.168.2.47:8000/storage/${tarea.evidencia}`,
+                              "_blank"
+                            )
+                          }
+                        >
+                          <FaFileAlt size={20} color="#0d6efd" />
+                        </Button>
+                      </OverlayTrigger>
+                    ) : (
+                      "Sin evidencia"
+                    )}
+                  </td>
+                  <td>{tarea.fechainicio}</td>
+                  <td>{tarea.fechafin || "N/A"}</td>
+                  <td>{getEstadoBadge(tarea.idestado)}</td>
+                  <td className="d-flex justify-content-center">
                     <OverlayTrigger
                       placement="top"
-                      overlay={<Tooltip>Ver Evidencia</Tooltip>}
+                      overlay={<Tooltip>Editar Tarea</Tooltip>}
                     >
                       <Button
-                        variant="link"
-                        onClick={() =>
-                          window.open(
-                            `http://192.168.2.47:8000/storage/${tarea.evidencia}`,
-                            "_blank"
-                          )
-                        }
+                        variant="outline-primary"
+                        size="sm"
+                        className="me-2"
+                        onClick={() => handleEdit(tarea)}
                       >
-                        <FaFileAlt size={20} color="#0d6efd" />
+                        <FaEdit />
                       </Button>
                     </OverlayTrigger>
-                  ) : (
-                    "Sin evidencia"
-                  )}
-                </td>
-                <td>{tarea.fechainicio}</td>
-                <td>{tarea.fechafin || "N/A"}</td>
-                <td>
-                  <Badge bg={getEstadoColor(tarea.idestado)}>
-                    {tarea.estado?.descripcion || "N/A"}
-                  </Badge>
-                </td>
-                <td className="d-flex justify-content-center">
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={<Tooltip>Editar Tarea</Tooltip>}
-                  >
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="me-2"
-                      onClick={() => handleEdit(tarea)}
-                    >
-                      <FaEdit />
-                    </Button>
-                  </OverlayTrigger>
 
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={<Tooltip>Eliminar Tarea</Tooltip>}
-                  >
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={() => handleDelete(tarea.id)}
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={<Tooltip>Eliminar Tarea</Tooltip>}
                     >
-                      <FaTrash />
-                    </Button>
-                  </OverlayTrigger>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleDelete(tarea.id)}
+                      >
+                        <FaTrash />
+                      </Button>
+                    </OverlayTrigger>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
 
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center mt-4">
           <Button
             variant="outline-primary"
             size="sm"
@@ -381,33 +403,38 @@ const Tareas = () => {
                 />
               </Form.Group>
 
+              <Row>
+                <Col>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Fecha Inicio</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="fechainicio"
+                      value={formData.fechainicio}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Fecha Fin</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="fechafin"
+                      value={formData.fechafin}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
               <Form.Group className="mb-3">
                 <Form.Label>Evidencia</Form.Label>
                 <Form.Control
                   type="file"
                   name="evidencia"
                   onChange={handleFileChange}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Fecha Inicio</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="fechainicio"
-                  value={formData.fechainicio}
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Fecha Fin</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="fechafin"
-                  value={formData.fechafin}
-                  onChange={handleChange}
                 />
               </Form.Group>
 
