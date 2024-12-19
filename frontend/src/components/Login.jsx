@@ -30,16 +30,13 @@ function Login() {
         password,
       });
 
-      // Guardar el token y el ID del usuario en localStorage
       localStorage.setItem("token", response.data.access_token);
-      localStorage.setItem("userId", response.data.user.id); // Suponemos que el backend devuelve el ID del usuario
+      localStorage.setItem("userId", response.data.user.id); 
 
-      // Configurar el encabezado Authorization globalmente para futuras solicitudes
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.access_token}`;
 
-      // Redirigir al dashboard
       navigate("/dashboard");
     } catch (error) {
       console.error("Error:", error);

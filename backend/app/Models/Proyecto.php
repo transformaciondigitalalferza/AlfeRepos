@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Area $area
  * @property Estado $estado
  */
-class proyecto extends Model
+class Proyecto extends Model
 {
     /**
      * The table associated with the model.

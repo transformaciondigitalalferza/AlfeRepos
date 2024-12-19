@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ControllersTable\PerspectivaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -8,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DataMigrationController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\UserDataController;
+use App\Http\Controllers\MigracionesPagadasController;
 
 use App\Http\Controllers\ControllersTable\ProyectoController;
 use App\Http\Controllers\ControllersTable\AreaController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\Politicas\PoliticaController;
 use App\Http\Controllers\Procedimientos\ProcedimientoController;
 use App\Http\Controllers\ControllersTable\TareaController;
 use App\Http\Controllers\ControllersTable\EstadoController;
+use App\Http\Controllers\ControllersTable\ComisionAprobadaController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -64,6 +67,14 @@ Route::apiResource('objetivooperacional', ObjetivoOperacionalController::class);
 Route::apiResource('tareas', TareaController::class);
 Route::apiResource('estados', EstadoController::class);
 
-// Agregados recientemente
 Route::post('/comisiones/proyecto', [ComisionController::class, 'obtenerComisiones']);
 Route::get('/migraciones', [ComisionController::class, 'obtenerMigraciones']);
+
+Route::post('/aprobar-comisiones', [ComisionController::class, 'aprobarComisiones']);
+
+Route::apiResource('migracionespagadas', MigracionesPagadasController::class);
+Route::apiResource('comisionesaprobadas', ComisionAprobadaController::class);
+
+Route::post('/comisiontodosproyectos',[ComisionController::class,'obtenerComisionTodosProyectos']);
+
+Route::apiResource('perspectiva', PerspectivaController::class);

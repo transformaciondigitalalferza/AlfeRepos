@@ -8,17 +8,15 @@ class Objetivoestrategico extends Model
 {
     protected $table = 'objetivoestrategico';
 
-    protected $fillable = ['tipoobjetivo', 'descripcion', 'fechainicio', 'fechafin', 'fechaactualizacion'];
+    protected $fillable = ['tipoobjetivo', 'descripcion', 'fechainicio', 'fechafin', 'fechaactualizacion', 'IdPerspectiva'];
 
-    public $timestamps = false; // Deshabilitar manejo automático de timestamps
+    public $timestamps = false;
 
-    public function tipoobjetivo()
+    public function tipoperspectiva()
     {
-        return $this->belongsTo('App\Models\Tipoobjetivo', 'tipoobjetivo');
+        return $this->belongsTo('App\Models\Perspectiva', 'IdPerspectiva');
     }
-
-    public function objetivooperacionals()
-    {
-        return $this->hasMany('App\Models\Objetivooperacional', 'idobjetivoestrategico');
+    public function MCI(){
+        return $this->hasMany('App\Models\MCI','IdEstrategico');
     }
 }

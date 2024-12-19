@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MigracionComision extends Model
+class ComisionAprobada extends Model
 {
-    use HasFactory;
-
-    protected $table = 'dbo.migracioncomisiones';
+    protected $table = 'comisionaprobada';
 
     protected $primaryKey = 'id';
 
@@ -32,29 +29,21 @@ class MigracionComision extends Model
         'desc_m2',
         'porcent_pagado',
         'fecha_migracion',
-        'estado',
         'nombres',
         'fecseparacion',
-        'fecinicial',  // Campo añadido
+        'fecinicial',
+        'pagado',
     ];
 
     protected $casts = [
-        'id' => 'integer',
-        'codigo_proyecto' => 'string',
-        'codigo_unidad' => 'string',
-        'codigo_proforma' => 'string',
-        'username_creador' => 'string',
-        'moneda' => 'string',
         'total_pagado' => 'decimal:2',
         'precio_base_proforma' => 'decimal:2',
-        'financiamiento' => 'string',
-        'dormitorios' => 'integer',
         'desc_m2' => 'decimal:2',
         'porcent_pagado' => 'decimal:2',
+        'dormitorios' => 'integer',
         'fecha_migracion' => 'date',
-        'estado' => 'boolean',
-        'nombres' => 'string',
         'fecseparacion' => 'date',
-        'fecinicial' => 'date',  // Campo añadido
+        'fecinicial' => 'date',
+        'pagado' => 'boolean',
     ];
 }

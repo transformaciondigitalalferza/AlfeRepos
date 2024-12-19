@@ -38,7 +38,6 @@ function Sidebar() {
   const handleCloseMobile = () => setShowMobile(false);
   const handleShowMobile = () => setShowMobile(true);
 
-  // Definimos el tema oscuro de forma predeterminada
   const theme = "dark";
   const themes = {
     dark: {
@@ -63,16 +62,13 @@ function Sidebar() {
       icon: <FaChartLine />,
       label: "Cálculo de Comisiones",
     },
-    { path: "/settings", icon: <FaCog />, label: "Configuraciones" },
-    { path: "/register", icon: <FaUserPlus />, label: "Nuevo Usuario" },
     {
-      path: "/UpdateDocs",
-      icon: <FaFileAlt />,
-      label: "Actualización Procedimientos y Políticas",
+      path: "/IndicadoresGest",
+      icon: <BsFileBarGraph />,
+      label: "Indicadores de Control de Gestión(MCI)",
     },
-    { path: "/formats", icon: <FaFileAlt />, label: "Formatos" },
     {
-      label: "Gestión Objetivos",
+      label: "Plan Estratégico",
       icon: <FaTasks />,
       children: [
         {
@@ -88,13 +84,25 @@ function Sidebar() {
     {
       path: "/Tareas",
       icon: <FaTasks />,
-      label: "Tareas",
+      label: "Objetivos a Corto Plazo",
     },
+
     {
-      path: "/IndicadoresGest",
-      icon: <BsFileBarGraph />,
-      label: "Control de Gestión(MCI)",
+      label: "Planificación Estratégica",
+      icon: <FaTasks />,
+      children: [
+        {
+          path: "/UpdateDocs",
+          label: "Actualización Procedimientos y Políticas",
+        },
+        {
+          path: "/formats",
+          label: "Formatos"
+        }
+      ]
     },
+    { path: "/register", icon: <FaUserPlus />, label: "Nuevo Usuario" },
+    { path: "/settings", icon: <FaCog />, label: "Configuraciones" },
     { path: "/logout", icon: <FaSignOutAlt />, label: "Cerrar Sesión" },
   ];
 
@@ -130,6 +138,7 @@ function Sidebar() {
           top: 0,
           left: 0,
           overflowY: "auto",
+          zIndex: 1000
         }}
       >
         <div className="sidebar-header d-flex align-items-center justify-content-between p-3">

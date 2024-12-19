@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Area $area
  * @property User[] $users
  */
-class subarea extends Model
+class SubArea extends Model
 {
     /**
      * The table associated with the model.
